@@ -42,8 +42,8 @@
         function renderMessage(message) {
             var message_html = '<p class="post-text">' + escapeHTML(message.value.content) + '</p>';
             var date_html = '';
-            if(message.value.date) {
-                date_html = '<p class="post-date">'+escapeHTML( new Date(message.value.date).toLocaleString())+'</p>';
+            if(message.timestamp) {
+                date_html = '<p class="post-date">'+escapeHTML( new Date(message.timestamp).toLocaleString())+'</p>';
             }
             $("#"+last_message).before('<div id="'+message.id+'" class="post">'+message_html + date_html +'</div>');
             last_message = message.id;
@@ -54,8 +54,7 @@
             if (content && content !== "") {
                 ds.push({
                     title: "タイトル",
-                    content: content,
-                    date: new Date().getTime()
+                    content: content
                 }, function (e) {});
             }
             $("#content").val("");
