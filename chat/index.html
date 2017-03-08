@@ -15,24 +15,32 @@
     $(function() {
         //1.ミルクココアインスタンスを作成
         var milkcocoa = new Milkcocoa({
-        	/*
+            /*
         	host: 'localhost',
         	port: 8000,
         	useSSL: false,
         	appId: 'rkk7Xci9g',
         	apiKey: '9aZUNbC0W75U5AnwQdTK4WeQKiiOvPKfGtD96uRD'
-        	*/
+            */
         	appId: 'ryQ_rnoql',
         	apiKey: '3MVRMdXi7LfmRnw-UM55rf3v8P79IdfLxXqDzD3A'
         });
         //2."message"データストアを作成
         var ds = milkcocoa.dataStore("message");
-        //3."message"データストアからメッセージを取ってくる
-        ds.history({}, function(err, messages) {
-        	console.log(err, messages);
-            messages.reverse().forEach(function(data) {
-                renderMessage(data);
+        milkcocoa.on('open', function() {
+            console.log('open!!')
+            gotoOnline();
+            //3."message"データストアからメッセージを取ってくる
+            ds.history({}, function(err, messages) {
+                console.log(err, messages);
+                clearMessages();
+                messages.reverse().forEach(function(data) {
+                    renderMessage(data);
+                });
             });
+        });
+        milkcocoa.on('close', function() {
+            gotoOffline();
         });
         //4."message"データストアのプッシュイベントを監視
         ds.on("push", function(e) {
@@ -48,12 +56,21 @@
             $("#"+last_message).before('<div id="'+message.id+'" class="post">'+message_html + date_html +'</div>');
             last_message = message.id;
         }
+        function gotoOnline() {
+            $("#title").text('CHAT by v3')
+        }
+        function gotoOffline() {
+            $("#title").text('CHAT by v3 (offline)')
+        }
+        function clearMessages() {
+            last_message = "dummy";
+            $("#messages").html('<div id="dummy"></div>');
+        }
         function post() {
             //5."message"データストアにメッセージをプッシュする
             var content = escapeHTML($("#content").val());
             if (content && content !== "") {
                 ds.push({
-                    title: "タイトル",
                     content: content
                 }, function (e) {});
             }
@@ -78,7 +95,7 @@
 
 <body>
     <div class="header">
-        <h1 class="logo">CHAT by v3</h1>
+        <h1 id="title" class="logo">CHAT by v3</h1>
     </div>
 
     <div class="container">
