@@ -86,7 +86,7 @@ function initMilkcocoa() {
 			} catch(e) {
 				_error(e);
 			}
-		}, 1000);
+		}, 100);
 	}	
 	
     function _error(error){
