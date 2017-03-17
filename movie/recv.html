@@ -45,8 +45,11 @@
 
 		        });
 		    });
+	        milkcocoa.on('close', function() {
+	        	alert('unexpected closed')
+	        });
             ds.history({}, function(err, messages) {
-            	loop(messages, 0);
+            	loop(messages.reverse(), 0);
             });
             function loop(messages, index) {
             	if(messages.length <= index) return;

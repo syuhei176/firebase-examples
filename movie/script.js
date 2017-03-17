@@ -29,6 +29,9 @@ function initMilkcocoa() {
     milkcocoa.on('open', function() {
         console.log('open!!');
     });
+    milkcocoa.on('close', function() {
+    	alert('unexpected closed')
+    });
     // handle imageupdate event
 	$(window).bind("imageupdate", function(e, data){
 		// カメラ画像をWebSocketで送信する
