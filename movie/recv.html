@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>receive video</title>
+	</head>
+	<body>
+    <div>
+		<img class="videoout" width=240 height=400>
+  	</div>
+		<script src="../milkcocoa.1.0.0.min.js"></script>
+		<script>
+			function uuid(prefix) {
+				var myuuid = localStorage.getItem(prefix+'myuuid');
+				if(myuuid) {
+					return myuuid
+				}else{
+					myuuid = new Date().getTime() + Math.floor(Math.random()*100);
+					localStorage.setItem(prefix+'myuuid', myuuid);
+					return myuuid;
+				}
+			}
+		    //1.ミルクココアインスタンスを作成
+		    var milkcocoa = new Milkcocoa({
+		    	/*
+		    	host: 'localhost',
+		    	port: 8000,
+		    	useSSL: false,
+		    	appId: 'rkk7Xci9g',
+		    	apiKey: '9aZUNbC0W75U5AnwQdTK4WeQKiiOvPKfGtD96uRD'
+		    	*/
+		    	uuid: uuid('recv'),
+		    	appId: 'ryQ_rnoql',
+		    	apiKey: 'sVr9NsVchL5TXQgfDJ7gaPLluqZFwmPIoJb_zd_D'
+		    });
+    		var channel = location.hash.substr(1) || 'root';
+		    var ds = milkcocoa.dataStore('video/' + channel);
+		    milkcocoa.on('open', function() {
+		        console.log('open!!');
+		        ds.on('push', function(e) {
+		        	console.log(e);
+
+					var vo_ = document.getElementsByClassName('videoout');
+					vo_[0].src = e.value.d;
+
+		        });
+		    });
+            ds.history({}, function(err, messages) {
+            	loop(messages, 0);
+            });
+            function loop(messages, index) {
+            	if(messages.length <= index) return;
+				var vo_ = document.getElementsByClassName('videoout');
+				vo_[0].src = messages[index].value.d;
+            	setTimeout(function() {
+            		loop(messages, index + 1);
+            	}, 100);
+            }
+
+		</script>
+	</body>
+</html>
