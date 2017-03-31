@@ -15,28 +15,26 @@
     $(function() {
         //1.ミルクココアインスタンスを作成
         var milkcocoa = new Milkcocoa({
-            /*
+            uuid: 'client1',
         	host: 'localhost',
         	port: 8000,
         	useSSL: false,
         	appId: 'rkk7Xci9g',
         	apiKey: '9aZUNbC0W75U5AnwQdTK4WeQKiiOvPKfGtD96uRD'
+            /*
+        	appId: 'demo',
+        	apiKey: 'demo'
             */
-        	appId: 'ryQ_rnoql',
-        	apiKey: '3MVRMdXi7LfmRnw-UM55rf3v8P79IdfLxXqDzD3A'
         });
         //2."message"データストアを作成
         var ds = milkcocoa.dataStore("message");
-        milkcocoa.on('open', function() {
-            console.log('open!!')
-            gotoOnline();
-            //3."message"データストアからメッセージを取ってくる
-            ds.history({}, function(err, messages) {
-                console.log(err, messages);
-                clearMessages();
-                messages.reverse().forEach(function(data) {
-                    renderMessage(data);
-                });
+        //gotoOnline();
+        //3."message"データストアからメッセージを取ってくる
+        ds.history({}, function(err, messages) {
+            console.log(err, messages);
+            clearMessages();
+            messages.reverse().forEach(function(data) {
+                renderMessage(data);
             });
         });
         milkcocoa.on('close', function() {
@@ -72,7 +70,9 @@
             if (content && content !== "") {
                 ds.push({
                     content: content
-                }, function (e) {});
+                }, function (e) {
+                    console.log(e);
+                });
             }
             $("#content").val("");
         }
